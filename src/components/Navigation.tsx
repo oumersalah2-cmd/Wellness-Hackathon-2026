@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useLocale, useTranslations } from 'next-intl'
 import clsx from 'clsx'
 import { useAuth } from '@/context/AuthContext'
@@ -12,11 +12,13 @@ export function Navigation() {
   const locale = useLocale()
   const pathname = usePathname()
   const { user, setUser, setProfile } = useAuth()
+  const router = useRouter()
 
   const handleLogout = async () => {
     await signOut()
     setUser(null)
     setProfile(null)
+    router.push(`/${locale}`)
   }
 
   const links = [
