@@ -5,10 +5,12 @@ import { useRouter } from 'next/navigation'
 import { useLocale } from 'next-intl'
 import { Button } from '@/components/Button'
 import { Card, CardHeader, CardBody } from '@/components/Card'
+import { useAuth } from '@/context/AuthContext'
 
 export default function HomePage() {
   const router = useRouter()
   const locale = useLocale()
+  const { user } = useAuth()
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-primary/10 via-background to-white dark:from-primary/20 dark:via-dark dark:to-neutral-900">
@@ -22,19 +24,30 @@ export default function HomePage() {
           Your personalized Ethiopian wellness companion - nutrition, fitness, skincare, and mental health in one AI-powered platform
         </p>
         <div className="flex gap-4 justify-center flex-wrap">
-          <Button
-            onClick={() => router.push(`/${locale}/signup`)}
-            size="lg"
-          >
-            Get Started 🚀
-          </Button>
-          <Button
-            onClick={() => router.push(`/${locale}/login`)}
-            variant="outline"
-            size="lg"
-          >
-            Log In
-          </Button>
+          {user ? (
+            <Button
+              onClick={() => router.push(`/${locale}/dashboard`)}
+              size="lg"
+            >
+              Go to Dashboard 🚀
+            </Button>
+          ) : (
+            <>
+              <Button
+                onClick={() => router.push(`/${locale}/signup`)}
+                size="lg"
+              >
+                Get Started 🚀
+              </Button>
+              <Button
+                onClick={() => router.push(`/${locale}/login`)}
+                variant="outline"
+                size="lg"
+              >
+                Log In
+              </Button>
+            </>
+          )}
         </div>
       </section>
 
@@ -111,13 +124,23 @@ export default function HomePage() {
             <p className="mb-6 text-lg opacity-90">
               Join thousands of Ethiopians taking control of their health with FitEthio
             </p>
-            <Button
-              onClick={() => router.push(`/${locale}/signup`)}
-              variant="secondary"
-              size="lg"
-            >
-              Start Your Journey 🌟
-            </Button>
+            {user ? (
+              <Button
+                onClick={() => router.push(`/${locale}/dashboard`)}
+                variant="secondary"
+                size="lg"
+              >
+                Return to Dashboard 🌟
+              </Button>
+            ) : (
+              <Button
+                onClick={() => router.push(`/${locale}/signup`)}
+                variant="secondary"
+                size="lg"
+              >
+                Start Your Journey 🌟
+              </Button>
+            )}
           </CardBody>
         </Card>
       </section>
