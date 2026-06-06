@@ -8,13 +8,16 @@ import { Button } from '@/components/Button'
 import { Input } from '@/components/Form'
 import { Card, CardHeader, CardBody } from '@/components/Card'
 import { useToast } from '@/components/Toast'
-import { signIn, signInWithGoogle, signInWithGithub, isSupabaseConfigured } from '@/lib/supabase'
+import { signIn, signInWithGoogle, isSupabaseConfigured, getProfile } from '@/lib/supabase'
+import { useAuth } from '@/context/AuthContext'
+import type { Profile } from '@/types'
 
 export default function LoginPage() {
   const t = useTranslations('auth')
   const router = useRouter()
   const locale = useLocale()
   const { addToast } = useToast()
+  const { setUser, setProfile } = useAuth()
   
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -35,10 +38,13 @@ export default function LoginPage() {
 
     setLoading(true)
     try {
-      const { error } = await signIn(email, password)
+      const { data, error } = await signIn(email, password)
       if (error) {
         addToast(error.message, 'error')
-      } else {
+      } else if (data?.user) {
+        setUser(data.user as any)
+        const { data: prof } = await getProfile(data.user.id)
+        if (prof) setProfile(prof as Profile)
         addToast('Login successful!', 'success')
         router.push(`/${locale}/dashboard`)
       }
@@ -52,28 +58,17 @@ export default function LoginPage() {
   const handleGoogleLogin = async () => {
     setLoading(true)
     try {
-      const { error } = await signInWithGoogle()
+      const { data, error } = await signInWithGoogle()
       if (error) {
         addToast((error as any).message, 'error')
-      } else if (!isSupabaseConfigured) {
-        addToast('Login successful (Demo Mode)!', 'success')
-        router.push(`/${locale}/dashboard`)
-      }
-    } catch (err) {
-      addToast('An error occurred', 'error')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleGithubLogin = async () => {
-    setLoading(true)
-    try {
-      const { error } = await signInWithGithub()
-      if (error) {
-        addToast((error as any).message, 'error')
-      } else if (!isSupabaseConfigured) {
-        addToast('Login successful (Demo Mode)!', 'success')
+      } else {
+        const userData = (data as any)?.user
+        if (userData) {
+          setUser(userData)
+          const { data: prof } = await getProfile(userData.id)
+          if (prof) setProfile(prof as Profile)
+        }
+        addToast('Login successful!', 'success')
         router.push(`/${locale}/dashboard`)
       }
     } catch (err) {
