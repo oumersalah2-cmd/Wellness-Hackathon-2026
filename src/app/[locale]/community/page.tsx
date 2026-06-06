@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { Card, CardHeader, CardBody } from '@/components/Card'
 import { LoadingSpinner } from '@/components/Loading'
 import { useAuth } from '@/context/AuthContext'
+import { ProtectedRoute } from '@/components/ProtectedRoute'
 
 // Mock Data for the Hackathon Demo
 const MOCK_LEADERBOARD = [
@@ -17,6 +18,14 @@ const MOCK_LEADERBOARD = [
 ]
 
 export default function CommunityPage() {
+  return (
+    <ProtectedRoute>
+      <CommunityContent />
+    </ProtectedRoute>
+  )
+}
+
+function CommunityContent() {
   const { profile } = useAuth()
   const [loading, setLoading] = useState(true)
 

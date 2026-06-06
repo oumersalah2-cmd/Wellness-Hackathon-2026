@@ -13,8 +13,17 @@ import { useToast } from '@/components/Toast'
 import { getProgressEntries, upsertProgressEntry } from '@/lib/supabase'
 import { getDateRange, calculateStreak } from '@/lib/utils'
 import type { WeeklyReport } from '@/types'
+import { ProtectedRoute } from '@/components/ProtectedRoute'
 
 export default function ProgressPage() {
+  return (
+    <ProtectedRoute>
+      <ProgressContent />
+    </ProtectedRoute>
+  )
+}
+
+function ProgressContent() {
   const t = useTranslations('progress')
   const locale = useLocale()
   const { profile, user } = useAuth()

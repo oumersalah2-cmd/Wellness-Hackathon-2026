@@ -9,8 +9,17 @@ import { LoadingSpinner } from '@/components/Loading'
 import { useToast } from '@/components/Toast'
 import { useAuth } from '@/context/AuthContext'
 import type { Mode2Response } from '@/types'
+import { ProtectedRoute } from '@/components/ProtectedRoute'
 
 export default function Mode2Page() {
+  return (
+    <ProtectedRoute>
+      <Mode2Content />
+    </ProtectedRoute>
+  )
+}
+
+function Mode2Content() {
   const t = useTranslations('mode2')
   const locale = useLocale()
   const { profile } = useAuth()

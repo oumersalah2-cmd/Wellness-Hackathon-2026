@@ -8,8 +8,17 @@ import { LoadingSpinner } from '@/components/Loading'
 import { useToast } from '@/components/Toast'
 import { useAuth } from '@/context/AuthContext'
 import type { Mode3Response } from '@/types'
+import { ProtectedRoute } from '@/components/ProtectedRoute'
 
 export default function Mode3Page() {
+  return (
+    <ProtectedRoute>
+      <Mode3Content />
+    </ProtectedRoute>
+  )
+}
+
+function Mode3Content() {
   const t = useTranslations('mode3')
   const locale = useLocale()
   const { profile } = useAuth()

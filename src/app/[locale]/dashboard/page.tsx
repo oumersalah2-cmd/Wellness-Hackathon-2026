@@ -11,8 +11,17 @@ import { useAuth } from '@/context/AuthContext'
 import { useToast } from '@/components/Toast'
 import { upsertProgressEntry, getDailyLogs } from '@/lib/supabase'
 import { calculateDailyWater } from '@/lib/utils'
+import { ProtectedRoute } from '@/components/ProtectedRoute'
 
 export default function DashboardPage() {
+  return (
+    <ProtectedRoute>
+      <DashboardContent />
+    </ProtectedRoute>
+  )
+}
+
+function DashboardContent() {
   const t = useTranslations('dashboard')
   const locale = useLocale()
   const { profile, user } = useAuth()
