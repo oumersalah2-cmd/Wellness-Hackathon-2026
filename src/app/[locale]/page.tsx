@@ -12,6 +12,12 @@ export default function HomePage() {
   const locale = useLocale()
   const { user } = useAuth()
 
+  React.useEffect(() => {
+    if (user) {
+      router.push(`/${locale}/dashboard`)
+    }
+  }, [user, router, locale])
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-primary/10 via-background to-white dark:from-primary/20 dark:via-dark dark:to-neutral-900">
       {/* Hero Section */}

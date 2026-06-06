@@ -129,16 +129,10 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <div className="flex gap-2">
-            <Button onClick={handleGoogleLogin} variant="outline" size="lg" className="w-full" disabled={loading}>
-              <span className="text-lg mr-2">🔐</span>
-              Google
-            </Button>
-            <Button onClick={handleGithubLogin} variant="outline" size="lg" className="w-full bg-gray-900 text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200" disabled={loading}>
-              <span className="text-lg mr-2">🐙</span>
-              GitHub
-            </Button>
-          </div>
+          <Button onClick={handleGoogleLogin} variant="outline" size="lg" className="w-full" disabled={loading}>
+            <span className="text-lg mr-2">🔐</span>
+            {t('googleAuth')}
+          </Button>
 
           <div className="text-center text-sm text-gray-600 dark:text-gray-400">
             {t('noAccount')}{' '}
