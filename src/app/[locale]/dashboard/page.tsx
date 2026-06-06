@@ -36,7 +36,7 @@ function DashboardContent() {
 
   const [waterLogged, setWaterLogged] = useState(0)
   const [mood, setMood] = useState(3)
-  const [showCheckIn, setShowCheckIn] = useState(false)
+  const [showModal, setShowModal] = useState(false)
   const [moodTips, setMoodTips] = useState<any>(null)
   const [sleepTips, setSleepTips] = useState<any>(null)
   const [loadingSleep, setLoadingSleep] = useState(false)
@@ -85,10 +85,6 @@ function DashboardContent() {
   useEffect(() => {
     if (!user) return
 
-    // Check morning check-in
-    const lastCheckIn = localStorage.getItem('lastCheckInDate')
-    if (lastCheckIn !== today) setShowCheckIn(true)
-
     // Load water logged today
     const savedWater = localStorage.getItem(`water_${today}`)
     if (savedWater) setWaterLogged(parseInt(savedWater))
@@ -126,7 +122,7 @@ function DashboardContent() {
     localStorage.setItem('lastCheckInDate', today)
     localStorage.setItem(`mood_${today}`, String(mood))
     setTodayMoodSaved(mood)
-    setShowCheckIn(false)
+    setShowModal(false)
     addToast('Check-in saved! 🎯', 'success')
 
     if (mood <= 3) {
@@ -193,18 +189,18 @@ function DashboardContent() {
       </div>
 
       {/* Morning Check-in Banner */}
-      {showCheckIn && (
-        <div className="mb-6 bg-accent/20 border-l-4 border-accent p-4 rounded-xl shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+      {todayMoodSaved === null && (
+        <div className="mb-6 bg-accent/20 border-l-4 border-accent p-4 rounded-xl shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 animate-fade-in">
           <div>
             <h3 className="font-bold text-accent-dark">Daily Habit Reminder 🔔</h3>
             <p className="text-sm text-gray-600">How are you feeling today, {profile.name}?</p>
           </div>
-          <Button onClick={() => setShowCheckIn(true)} size="sm">Check In Now</Button>
+          <Button onClick={() => setShowModal(true)} size="sm">Check In Now</Button>
         </div>
       )}
 
       {/* Morning Check-in Modal */}
-      {showCheckIn && (
+      {showModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <Card className="max-w-md w-full">
             <CardHeader>{t('morningCheckIn')}</CardHeader>
@@ -225,9 +221,14 @@ function DashboardContent() {
                   <span>😢</span><span>😔</span><span>😐</span><span>😊</span><span>🤩</span>
                 </div>
               </div>
-              <Button onClick={saveMood} size="lg" className="w-full">
-                Save Check-In ✓
-              </Button>
+              <div className="flex gap-2">
+                <Button onClick={() => setShowModal(false)} variant="outline" className="w-full">
+                  Cancel
+                </Button>
+                <Button onClick={saveMood} className="w-full">
+                  Save Check-In ✓
+                </Button>
+              </div>
             </CardBody>
           </Card>
         </div>
