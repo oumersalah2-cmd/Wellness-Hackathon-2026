@@ -8,7 +8,7 @@ import { Button } from '@/components/Button'
 import { Input } from '@/components/Form'
 import { Card, CardHeader, CardBody } from '@/components/Card'
 import { useToast } from '@/components/Toast'
-import { signIn } from '@/lib/supabase'
+import { signIn, signInWithGoogle, isSupabaseConfigured } from '@/lib/supabase'
 
 export default function LoginPage() {
   const t = useTranslations('auth')
@@ -40,6 +40,23 @@ export default function LoginPage() {
         addToast(error.message, 'error')
       } else {
         addToast('Login successful!', 'success')
+        router.push(`/${locale}/dashboard`)
+      }
+    } catch (err) {
+      addToast('An error occurred', 'error')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleGoogleLogin = async () => {
+    setLoading(true)
+    try {
+      const { error } = await signInWithGoogle()
+      if (error) {
+        addToast((error as any).message, 'error')
+      } else if (!isSupabaseConfigured) {
+        addToast('Login successful (Demo Mode)!', 'success')
         router.push(`/${locale}/dashboard`)
       }
     } catch (err) {
@@ -95,7 +112,7 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <Button variant="outline" size="lg" className="w-full">
+          <Button onClick={handleGoogleLogin} variant="outline" size="lg" className="w-full" disabled={loading}>
             <span className="text-lg mr-2">🔐</span>
             {t('googleAuth')}
           </Button>

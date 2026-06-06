@@ -8,7 +8,7 @@ import { Button } from '@/components/Button'
 import { Input } from '@/components/Form'
 import { Card, CardHeader, CardBody } from '@/components/Card'
 import { useToast } from '@/components/Toast'
-import { signUp } from '@/lib/supabase'
+import { signUp, signInWithGoogle, isSupabaseConfigured } from '@/lib/supabase'
 
 export default function SignupPage() {
   const t = useTranslations('auth')
@@ -45,6 +45,23 @@ export default function SignupPage() {
         router.push(`/${locale}/onboarding`)
       }
     } catch {
+      addToast('An error occurred', 'error')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleGoogleSignup = async () => {
+    setLoading(true)
+    try {
+      const { error } = await signInWithGoogle()
+      if (error) {
+        addToast((error as any).message, 'error')
+      } else if (!isSupabaseConfigured) {
+        addToast('Signup successful (Demo Mode)! Complete your profile.', 'success')
+        router.push(`/${locale}/onboarding`)
+      }
+    } catch (err) {
       addToast('An error occurred', 'error')
     } finally {
       setLoading(false)
@@ -88,6 +105,21 @@ export default function SignupPage() {
               {t('signupButton')}
             </Button>
           </form>
+
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-white dark:bg-neutral-800 text-gray-600">or</span>
+            </div>
+          </div>
+
+          <Button onClick={handleGoogleSignup} variant="outline" size="lg" className="w-full" disabled={loading}>
+            <span className="text-lg mr-2">🔐</span>
+            {t('googleAuth')}
+          </Button>
+
           <div className="text-center text-sm text-gray-600 dark:text-gray-400">
             {t('haveAccount')}{' '}
             <Link href={`/${locale}/login`} className="text-primary font-semibold hover:underline">

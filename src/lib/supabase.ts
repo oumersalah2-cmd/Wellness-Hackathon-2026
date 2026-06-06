@@ -55,6 +55,21 @@ export async function signIn(email: string, password: string) {
   return { data: { user }, error: null }
 }
 
+export async function signInWithGoogle() {
+  const client = getClient()
+  if (client) {
+    return client.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: typeof window !== 'undefined' ? `${window.location.origin}/en/dashboard` : undefined,
+      },
+    })
+  }
+  const user = { id: 'demo-google-user', email: 'google.demo@fitethio.com' }
+  setDemoUser(user)
+  return { data: { user }, error: null }
+}
+
 export async function signOut() {
   const client = getClient()
   if (client) return client.auth.signOut()
