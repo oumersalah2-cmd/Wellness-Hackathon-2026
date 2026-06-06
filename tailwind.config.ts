@@ -10,14 +10,14 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        primary: '#2D7A4F',
+        primary: '#059669',
         accent: '#E8B84B',
         background: '#F9F6F0',
         dark: '#1a1a1a',
       },
       fontFamily: {
         serif: ['Georgia', 'Instrument Serif', 'serif'],
-        sans: ['DM Sans', 'system-ui', 'sans-serif'],
+        sans: ['Outfit', 'system-ui', 'sans-serif'],
       },
       animation: {
         'slide-in': 'slideIn 0.3s ease-out',

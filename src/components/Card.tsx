@@ -10,7 +10,7 @@ export function Card({ children, className }: CardProps) {
   return (
     <div
       className={clsx(
-        'bg-white dark:bg-neutral-800 rounded-xl shadow-md border border-gray-100 dark:border-gray-700 p-6',
+        'bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl rounded-2xl shadow-xl border border-white/40 dark:border-white/10 p-6 transition-all duration-300',
         className
       )}
     >

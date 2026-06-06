@@ -21,6 +21,21 @@ const DEMO_USER_KEY = 'fitethio_user'
 const DEMO_PROFILE_KEY = 'fitethio_profile'
 const DEMO_LOGS_KEY = 'fitethio_logs'
 const DEMO_PROGRESS_KEY = 'fitethio_progress'
+const DEMO_REGISTERED_KEY = 'fitethio_registered'
+
+function getRegisteredUsers() {
+  if (typeof window === 'undefined') return []
+  const raw = localStorage.getItem(DEMO_REGISTERED_KEY)
+  return raw ? JSON.parse(raw) : []
+}
+
+function registerDemoUser(email: string) {
+  const users = getRegisteredUsers()
+  if (!users.includes(email)) {
+    users.push(email)
+    localStorage.setItem(DEMO_REGISTERED_KEY, JSON.stringify(users))
+  }
+}
 
 function getDemoUser() {
   if (typeof window === 'undefined') return null
@@ -38,6 +53,7 @@ export async function signUp(email: string, password: string) {
     return client.auth.signUp({ email, password })
   }
   const user = { id: 'demo-' + Date.now(), email }
+  registerDemoUser(email)
   setDemoUser(user)
   return { data: { user }, error: null }
 }
@@ -50,6 +66,12 @@ export async function signIn(email: string, password: string) {
   if (!email || !password) {
     return { data: { user: null }, error: { message: 'Email and password required' } as any }
   }
+  
+  const registered = getRegisteredUsers()
+  if (!registered.includes(email)) {
+    return { data: { user: null }, error: { message: 'Account not found. Please sign up first.' } as any }
+  }
+
   const user = { id: 'demo-user', email }
   setDemoUser(user)
   return { data: { user }, error: null }

@@ -17,13 +17,13 @@ export function Button({
   ...props
 }: ButtonProps) {
   const base =
-    'inline-flex items-center justify-center font-semibold rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-primary/50 disabled:opacity-50 disabled:cursor-not-allowed'
+    'inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary/50 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]'
 
   const variants = {
-    primary: 'bg-primary text-white hover:bg-primary/90 shadow-md',
-    secondary: 'bg-accent text-dark hover:bg-accent/90 shadow-md',
+    primary: 'bg-gradient-to-r from-primary to-emerald-500 text-white hover:shadow-lg hover:shadow-primary/30 shadow-md',
+    secondary: 'bg-gradient-to-r from-accent to-yellow-500 text-white hover:shadow-lg hover:shadow-accent/30 shadow-md',
     outline:
-      'border-2 border-primary text-primary hover:bg-primary hover:text-white dark:border-primary dark:text-primary',
+      'border-2 border-primary/20 hover:border-primary text-primary hover:bg-primary/5 dark:border-primary/30 dark:text-primary dark:hover:bg-primary/10',
   }
 
   const sizes = {
