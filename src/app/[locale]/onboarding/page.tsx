@@ -87,7 +87,11 @@ export default function OnboardingPage() {
         age: parseInt(formData.age),
         weight_kg: parseFloat(formData.weight_kg),
         height_cm: parseFloat(formData.height_cm),
-        language: locale,
+        language: locale as 'en' | 'am',
+        gender: formData.gender as 'male' | 'female' | 'other',
+        goal: formData.goal as 'lose_weight' | 'build_muscle' | 'stay_fit' | 'eat_healthy',
+        skin_type: formData.skin_type as 'oily' | 'dry' | 'combination' | 'normal' | 'sensitive',
+        activity_level: formData.activity_level as 'sedentary' | 'light' | 'moderate' | 'very_active',
       }
 
       await createProfile(userId, profileData)
