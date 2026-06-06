@@ -76,7 +76,7 @@
     "quickAccess": "Quick Access",
     "mode1": "Food → Workout",
     "mode2": "Workout → Food",
-    "mode3": "Skincare & Wellness",
+    "mode3": "Beauty & Skin Wellness",
     "activeFasting": "Active Fasting",
     "fastingEnds": "Ends in",
     "days": "days",
@@ -117,8 +117,8 @@
     "avoid": "Foods to Avoid"
   },
   "mode3": {
-    "title": "Skincare & Wellness",
-    "description": "Personalized skincare routine, supplements & natural options",
+    "title": "Beauty & Skin Wellness",
+    "description": "Personalized budget-friendly skincare routine, local supplements & natural Ethiopian options",
     "skincare": "Skincare Routine",
     "morning": "Morning Routine",
     "evening": "Evening Routine",

@@ -45,7 +45,7 @@ export default function OnboardingPage() {
     switch (step) {
       case 2:
         if (!formData.name) newErrors.name = 'Name is required'
-        if (!formData.age || parseInt(formData.age) < 13) newErrors.age = 'Valid age required'
+        if (!formData.age || parseInt(formData.age) < 18) newErrors.age = 'You must be at least 18 years old'
         if (!formData.gender) newErrors.gender = 'Gender is required'
         if (!formData.weight_kg || parseFloat(formData.weight_kg) <= 0) newErrors.weight_kg = 'Valid weight required'
         if (!formData.height_cm || parseFloat(formData.height_cm) <= 0) newErrors.height_cm = 'Valid height required'
@@ -177,7 +177,7 @@ export default function OnboardingPage() {
                   value={formData.age}
                   onChange={handleInputChange}
                   error={errors.age}
-                  min="13"
+                  min="18"
                 />
                 <Select
                   label={t('gender')}
@@ -381,21 +381,25 @@ export default function OnboardingPage() {
                     <CardHeader className="text-3xl">{t('bmiResult')}</CardHeader>
                     <CardBody className="space-y-8">
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div className="bg-primary/10 p-6 rounded-lg">
-                          <div className="text-4xl font-bold text-primary">{bmi.toFixed(1)}</div>
-                          <div className="text-sm text-gray-600 dark:text-gray-400">BMI</div>
+                        <div className="bg-gradient-to-br from-primary/20 to-primary/5 p-6 rounded-2xl border border-primary/20 shadow-sm relative overflow-hidden">
+                          <div className="absolute -right-4 -top-4 text-6xl opacity-20">⚖️</div>
+                          <div className="text-4xl font-bold text-primary mb-1">{bmi.toFixed(1)}</div>
+                          <div className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide">BMI Score</div>
                         </div>
-                        <div className="bg-accent/10 p-6 rounded-lg">
-                          <div className="text-lg font-bold">{category}</div>
-                          <div className="text-sm text-gray-600 dark:text-gray-400">Status</div>
+                        <div className="bg-gradient-to-br from-accent/20 to-accent/5 p-6 rounded-2xl border border-accent/20 shadow-sm relative overflow-hidden">
+                          <div className="absolute -right-4 -top-4 text-6xl opacity-20">📊</div>
+                          <div className="text-xl font-bold text-accent-dark mb-1">{category}</div>
+                          <div className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide">Status</div>
                         </div>
-                        <div className="bg-green-100 dark:bg-green-900 p-6 rounded-lg">
-                          <div className="text-2xl font-bold text-green-600">{calories}</div>
-                          <div className="text-sm text-gray-600 dark:text-gray-400">Kcal/day</div>
+                        <div className="bg-gradient-to-br from-green-200 to-green-50 dark:from-green-900/40 dark:to-green-900/10 p-6 rounded-2xl border border-green-200 dark:border-green-800 shadow-sm relative overflow-hidden">
+                          <div className="absolute -right-4 -top-4 text-6xl opacity-20">🔥</div>
+                          <div className="text-3xl font-bold text-green-700 dark:text-green-400 mb-1">{calories}</div>
+                          <div className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide">Kcal / Day</div>
                         </div>
-                        <div className="bg-blue-100 dark:bg-blue-900 p-6 rounded-lg">
-                          <div className="text-2xl font-bold text-blue-600">{(water / 1000).toFixed(1)}L</div>
-                          <div className="text-sm text-gray-600 dark:text-gray-400">Water/day</div>
+                        <div className="bg-gradient-to-br from-blue-200 to-blue-50 dark:from-blue-900/40 dark:to-blue-900/10 p-6 rounded-2xl border border-blue-200 dark:border-blue-800 shadow-sm relative overflow-hidden">
+                          <div className="absolute -right-4 -top-4 text-6xl opacity-20">💧</div>
+                          <div className="text-3xl font-bold text-blue-700 dark:text-blue-400 mb-1">{(water / 1000).toFixed(1)}L</div>
+                          <div className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide">Water / Day</div>
                         </div>
                       </div>
 

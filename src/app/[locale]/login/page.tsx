@@ -8,7 +8,7 @@ import { Button } from '@/components/Button'
 import { Input } from '@/components/Form'
 import { Card, CardHeader, CardBody } from '@/components/Card'
 import { useToast } from '@/components/Toast'
-import { signIn, signInWithGoogle, isSupabaseConfigured } from '@/lib/supabase'
+import { signIn, signInWithGoogle, signInWithGithub, isSupabaseConfigured } from '@/lib/supabase'
 
 export default function LoginPage() {
   const t = useTranslations('auth')
@@ -53,6 +53,23 @@ export default function LoginPage() {
     setLoading(true)
     try {
       const { error } = await signInWithGoogle()
+      if (error) {
+        addToast((error as any).message, 'error')
+      } else if (!isSupabaseConfigured) {
+        addToast('Login successful (Demo Mode)!', 'success')
+        router.push(`/${locale}/dashboard`)
+      }
+    } catch (err) {
+      addToast('An error occurred', 'error')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleGithubLogin = async () => {
+    setLoading(true)
+    try {
+      const { error } = await signInWithGithub()
       if (error) {
         addToast((error as any).message, 'error')
       } else if (!isSupabaseConfigured) {
@@ -112,10 +129,16 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <Button onClick={handleGoogleLogin} variant="outline" size="lg" className="w-full" disabled={loading}>
-            <span className="text-lg mr-2">🔐</span>
-            {t('googleAuth')}
-          </Button>
+          <div className="flex gap-2">
+            <Button onClick={handleGoogleLogin} variant="outline" size="lg" className="w-full" disabled={loading}>
+              <span className="text-lg mr-2">🔐</span>
+              Google
+            </Button>
+            <Button onClick={handleGithubLogin} variant="outline" size="lg" className="w-full bg-gray-900 text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200" disabled={loading}>
+              <span className="text-lg mr-2">🐙</span>
+              GitHub
+            </Button>
+          </div>
 
           <div className="text-center text-sm text-gray-600 dark:text-gray-400">
             {t('noAccount')}{' '}

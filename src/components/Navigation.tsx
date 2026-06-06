@@ -4,11 +4,20 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useLocale, useTranslations } from 'next-intl'
 import clsx from 'clsx'
+import { useAuth } from '@/context/AuthContext'
+import { signOut } from '@/lib/supabase'
 
 export function Navigation() {
   const t = useTranslations('nav')
   const locale = useLocale()
   const pathname = usePathname()
+  const { user, setUser, setProfile } = useAuth()
+
+  const handleLogout = async () => {
+    await signOut()
+    setUser(null)
+    setProfile(null)
+  }
 
   const links = [
     { href: `/${locale}`, label: t('home'), icon: '🏠' },
@@ -17,6 +26,7 @@ export function Navigation() {
     { href: `/${locale}/mode2`, label: t('workout'), icon: '💪' },
     { href: `/${locale}/mode3`, label: t('wellness'), icon: '✨' },
     { href: `/${locale}/progress`, label: t('progress'), icon: '📈' },
+    { href: `/${locale}/community`, label: 'Community', icon: '🏆' },
   ]
 
   const isActive = (href: string) => pathname === href
@@ -55,12 +65,21 @@ export function Navigation() {
             >
               {locale === 'en' ? '🇪🇹 አማ' : '🇬🇧 EN'}
             </Link>
-            <Link
-              href={`/${locale}/login`}
-              className="px-3 py-1.5 text-sm rounded-lg bg-primary text-white hover:bg-primary/90"
-            >
-              Login
-            </Link>
+            {user ? (
+              <button
+                onClick={handleLogout}
+                className="px-3 py-1.5 text-sm rounded-lg bg-red-500 text-white hover:bg-red-600 transition-colors"
+              >
+                Log Out
+              </button>
+            ) : (
+              <Link
+                href={`/${locale}/login`}
+                className="px-3 py-1.5 text-sm rounded-lg bg-primary text-white hover:bg-primary/90 transition-colors"
+              >
+                Login
+              </Link>
+            )}
           </div>
         </div>
       </div>

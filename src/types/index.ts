@@ -63,6 +63,7 @@ export interface Exercise {
   sets: number;
   reps: number;
   duration_min: number;
+  youtube_query?: string;
 }
 
 export interface WorkoutPlan {

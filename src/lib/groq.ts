@@ -73,7 +73,8 @@ Respond ONLY with valid JSON (no markdown, no code blocks):
         "name": "exercise name",
         "sets": number,
         "reps": number,
-        "duration_min": number
+        "duration_min": number,
+        "youtube_query": "URL encoded search query for a YouTube tutorial (e.g. 'how+to+do+squats+properly')"
       }
     ],
     "best_time": "suggested time",
@@ -130,10 +131,10 @@ Respond in ${language === 'am' ? 'Amharic' : 'English'}.`;
   let workoutType = 'Full Body Strength';
   let duration = 30;
   let exercises = [
-    { name: 'Squats', sets: 3, reps: 12, duration_min: 5 },
-    { name: 'Push-ups', sets: 3, reps: 10, duration_min: 5 },
-    { name: 'Lunges', sets: 3, reps: 10, duration_min: 5 },
-    { name: 'Plank', sets: 3, reps: 60, duration_min: 3 }
+    { name: 'Squats', sets: 3, reps: 12, duration_min: 5, youtube_query: 'how+to+do+squats+properly' },
+    { name: 'Push-ups', sets: 3, reps: 10, duration_min: 5, youtube_query: 'how+to+do+pushups+for+beginners' },
+    { name: 'Lunges', sets: 3, reps: 10, duration_min: 5, youtube_query: 'how+to+do+lunges' },
+    { name: 'Plank', sets: 3, reps: 60, duration_min: 3, youtube_query: 'how+to+plank+correctly' }
   ];
   let bestTime = 'Late afternoon';
   let waterGlasses = 3;
@@ -142,9 +143,9 @@ Respond in ${language === 'am' ? 'Amharic' : 'English'}.`;
     workoutType = 'Gentle Recovery';
     duration = 20;
     exercises = [
-      { name: 'Stretching', sets: 1, reps: 1, duration_min: 8 },
-      { name: 'Walking', sets: 1, reps: 1, duration_min: 10 },
-      { name: 'Yoga', sets: 1, reps: 1, duration_min: 5 }
+      { name: 'Stretching', sets: 1, reps: 1, duration_min: 8, youtube_query: 'full+body+stretching+routine' },
+      { name: 'Walking', sets: 1, reps: 1, duration_min: 10, youtube_query: 'brisk+walking+form' },
+      { name: 'Yoga', sets: 1, reps: 1, duration_min: 5, youtube_query: 'beginner+yoga+routine' }
     ];
     bestTime = 'Evening after break-fast';
     waterGlasses = 4;
@@ -152,10 +153,10 @@ Respond in ${language === 'am' ? 'Amharic' : 'English'}.`;
     workoutType = 'HIIT Cardio';
     duration = 40;
     exercises = [
-      { name: 'Jumping Jacks', sets: 4, reps: 20, duration_min: 8 },
-      { name: 'High Knees', sets: 4, reps: 30, duration_min: 8 },
-      { name: 'Squats', sets: 3, reps: 15, duration_min: 6 },
-      { name: 'Burpees', sets: 3, reps: 8, duration_min: 5 }
+      { name: 'Jumping Jacks', sets: 4, reps: 20, duration_min: 8, youtube_query: 'how+to+do+jumping+jacks' },
+      { name: 'High Knees', sets: 4, reps: 30, duration_min: 8, youtube_query: 'how+to+do+high+knees' },
+      { name: 'Squats', sets: 3, reps: 15, duration_min: 6, youtube_query: 'bodyweight+squats+tutorial' },
+      { name: 'Burpees', sets: 3, reps: 8, duration_min: 5, youtube_query: 'how+to+do+burpees' }
     ];
     bestTime = 'Morning before breakfast';
     waterGlasses = 4;
@@ -163,10 +164,10 @@ Respond in ${language === 'am' ? 'Amharic' : 'English'}.`;
     workoutType = 'Hypertrophy Strength';
     duration = 45;
     exercises = [
-      { name: 'Weighted Squats', sets: 4, reps: 10, duration_min: 10 },
-      { name: 'Push-ups', sets: 4, reps: 12, duration_min: 8 },
-      { name: 'Lunges', sets: 3, reps: 12, duration_min: 8 },
-      { name: 'Plank Hold', sets: 3, reps: 60, duration_min: 4 }
+      { name: 'Weighted Squats', sets: 4, reps: 10, duration_min: 10, youtube_query: 'how+to+do+weighted+squats' },
+      { name: 'Push-ups', sets: 4, reps: 12, duration_min: 8, youtube_query: 'pushup+variations+for+muscle' },
+      { name: 'Lunges', sets: 3, reps: 12, duration_min: 8, youtube_query: 'walking+lunges+tutorial' },
+      { name: 'Plank Hold', sets: 3, reps: 60, duration_min: 4, youtube_query: 'perfect+plank+form' }
     ];
     bestTime = 'Late afternoon';
     waterGlasses = 3;
@@ -239,9 +240,10 @@ User profile:
 
 Workout completed: "${workoutDescription}"
 
-Estimate calories burned. Recommend specific Ethiopian meals (from: injera, tibs, shiro, misir wot, kinche, ful, kategna, firfir, gored gored, doro wot, ayib, teff porridge, sambusa, chechebsa, genfo, enkulal firfir, dulet, derek tibs) for breakfast, lunch, and dinner today to fuel recovery.
+Estimate calories burned from this workout. Do NOT hallucinate random sports. Only assess the provided workout.
+Then, recommend specific REAL Ethiopian meals ONLY (from: injera, tibs, shiro, misir wot, kinche, ful, kategna, firfir, gored gored, doro wot, ayib, teff porridge, sambusa, chechebsa, genfo, enkulal firfir, dulet, derek tibs) for breakfast, lunch, and dinner today to fuel recovery.
 ${profile.fasting_mode ? 'All suggestions MUST be vegan/fasting-friendly (no meat/dairy). Use: yetsom beyaynetu, misir wot, shiro, ful, vegetables.' : ''}
-Include portions, macros, and reasoning.
+Include accurate portions, macros, and reasoning. Never recommend non-Ethiopian foods like pasta, burgers, or generic salads.
 
 Respond ONLY with valid JSON (no markdown, no code blocks):
 {

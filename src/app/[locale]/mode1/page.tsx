@@ -103,7 +103,19 @@ export default function Mode1Page() {
               <div className="space-y-3">
                 {result.workout.exercises.map((ex, i) => (
                   <div key={i} className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                    <span className="font-semibold">{ex.name}</span>
+                    <div className="flex flex-col">
+                      <span className="font-semibold">{ex.name}</span>
+                      {ex.youtube_query && (
+                        <a
+                          href={`https://www.youtube.com/results?search_query=${ex.youtube_query}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-blue-500 hover:underline flex items-center mt-1"
+                        >
+                          ▶ Watch Video
+                        </a>
+                      )}
+                    </div>
                     <span className="text-primary font-bold">
                       {ex.duration_min > 0 ? `${ex.duration_min} min` : `${ex.sets} x ${ex.reps}`}
                     </span>

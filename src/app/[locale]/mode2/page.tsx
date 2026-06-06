@@ -96,6 +96,11 @@ export default function Mode2Page() {
                 )
               })}
             </CardBody>
+            <div className="px-4 pb-4">
+              <Button onClick={analyze} isLoading={loading} variant="secondary" className="w-full">
+                🔄 Swap Meals for Alternatives
+              </Button>
+            </div>
           </Card>
 
           {result.avoid.length > 0 && (

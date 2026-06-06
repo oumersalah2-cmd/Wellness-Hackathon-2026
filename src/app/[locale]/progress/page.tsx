@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { useTranslations } from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl'
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import { Button } from '@/components/Button'
 import { Input } from '@/components/Form'
@@ -9,13 +9,14 @@ import { Card, CardHeader, CardBody } from '@/components/Card'
 import { LoadingSpinner } from '@/components/Loading'
 import { useAuth } from '@/context/AuthContext'
 import { useToast } from '@/components/Toast'
-import { generateWeeklyReport } from '@/lib/groq'
+
 import { getProgressEntries, upsertProgressEntry } from '@/lib/supabase'
 import { getDateRange, calculateStreak } from '@/lib/utils'
 import type { WeeklyReport } from '@/types'
 
 export default function ProgressPage() {
   const t = useTranslations('progress')
+  const locale = useLocale()
   const { profile, user } = useAuth()
   const { toasts, addToast, removeToast } = useToast()
 
@@ -87,7 +88,13 @@ export default function ProgressPage() {
         weight_change: -1.2,
       }
 
-      const generatedReport = await generateWeeklyReport(profile, weeklyStats, profile.language as 'en' | 'am')
+      const res = await fetch('/api/weekly', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ profile, weeklyStats, language: locale }),
+      })
+      const generatedReport = await res.json()
+      
       setReport(generatedReport)
       addToast('Report generated! 📄', 'success')
     } catch (error) {

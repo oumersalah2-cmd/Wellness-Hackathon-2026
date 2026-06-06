@@ -22,6 +22,9 @@ export default function DashboardPage() {
   const [mood, setMood] = useState(3)
   const [showCheckIn, setShowCheckIn] = useState(false)
   const [todaysLogs, setTodaysLogs] = useState<any[]>([])
+  const [moodTips, setMoodTips] = useState<any>(null)
+  const [sleepTips, setSleepTips] = useState<any>(null)
+  const [loadingSleep, setLoadingSleep] = useState(false)
 
   const today = new Date().toISOString().split('T')[0]
   const waterTarget = profile ? calculateDailyWater(profile.weight_kg) : 2000
@@ -58,6 +61,37 @@ export default function DashboardPage() {
       localStorage.setItem('lastCheckInDate', today)
       setShowCheckIn(false)
       addToast('Check-in saved! 🎯', 'success')
+      
+      if (mood <= 3) {
+        try {
+          const res = await fetch('/api/mood', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ profile, moodScore: mood, language: locale }),
+          })
+          const data = await res.json()
+          setMoodTips(data)
+        } catch (e) {
+          console.error(e)
+        }
+      }
+    }
+  }
+
+  const getSleepTips = async () => {
+    setLoadingSleep(true)
+    try {
+      const res = await fetch('/api/sleep', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ profile, bedtimeGoal: '10:00 PM', stressLevel: 5, language: locale }),
+      })
+      const data = await res.json()
+      setSleepTips(data)
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setLoadingSleep(false)
     }
   }
 
@@ -83,6 +117,16 @@ export default function DashboardPage() {
         </h1>
         <p className="text-gray-600 dark:text-gray-400">{today}</p>
       </div>
+
+      {showCheckIn && (
+        <div className="mb-6 bg-accent/20 border-l-4 border-accent p-4 rounded shadow-sm flex justify-between items-center">
+          <div>
+            <h3 className="font-bold text-accent-dark">Daily Habit Reminder 🔔</h3>
+            <p className="text-sm">Don't forget to complete your morning check-in!</p>
+          </div>
+          <Button onClick={() => setShowCheckIn(true)} size="sm">Check In Now</Button>
+        </div>
+      )}
 
       {/* Morning Check-in Modal */}
       {showCheckIn && (
@@ -116,6 +160,32 @@ export default function DashboardPage() {
             </CardBody>
           </Card>
         </div>
+      )}
+
+      {/* Mood Tips Rendering */}
+      {moodTips && (
+        <Card className="mb-8 border-primary/20 bg-primary/5">
+          <CardHeader className="flex items-center gap-2 text-primary">
+            <span>🧠</span> {moodTips.title}
+          </CardHeader>
+          <CardBody className="space-y-4">
+            <ul className="list-disc pl-5 space-y-2">
+              {moodTips.tips.map((tip: string, idx: number) => (
+                <li key={idx} className="text-sm">{tip}</li>
+              ))}
+            </ul>
+            {moodTips.breathing_exercise && (
+              <div className="bg-white/50 dark:bg-black/20 p-4 rounded-lg mt-4">
+                <h4 className="font-bold mb-2">{moodTips.breathing_exercise.technique}</h4>
+                <ol className="list-decimal pl-5 space-y-1 text-sm">
+                  {moodTips.breathing_exercise.steps.map((step: string, idx: number) => (
+                    <li key={idx}>{step}</li>
+                  ))}
+                </ol>
+              </div>
+            )}
+          </CardBody>
+        </Card>
       )}
 
       {/* Quick Access Grid */}
@@ -228,7 +298,7 @@ export default function DashboardPage() {
                 <CardBody className="text-center">
                   <div className="text-4xl mb-3">✨</div>
                   <h3 className="font-semibold">{t('mode3')}</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Skincare & Wellness</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Budget-Friendly Local Skincare</p>
                 </CardBody>
               </Card>
             </Link>
@@ -270,6 +340,35 @@ export default function DashboardPage() {
                   View Full Report →
                 </Button>
               </Link>
+            </CardBody>
+          </Card>
+          {/* Sleep Card */}
+          <Card>
+            <CardHeader className="flex items-center justify-between">
+              <span>Sleep Setup 🌙</span>
+              {!sleepTips && (
+                <Button onClick={getSleepTips} size="sm" variant="outline" isLoading={loadingSleep}>
+                  Get Tips
+                </Button>
+              )}
+            </CardHeader>
+            <CardBody>
+              {sleepTips ? (
+                <div className="space-y-4 text-sm">
+                  <div className="flex justify-between font-semibold border-b pb-2">
+                    <span>Target Wake Up</span>
+                    <span className="text-primary">{sleepTips.wake_up_time}</span>
+                  </div>
+                  <div>
+                    <p className="font-semibold mb-2">Bedtime Routine:</p>
+                    <ul className="list-disc pl-4 space-y-1 text-gray-600 dark:text-gray-400">
+                      {sleepTips.bedtime_routine.map((s: string, i: number) => <li key={i}>{s}</li>)}
+                    </ul>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-sm text-gray-500">Generate your evening routine for better recovery.</p>
+              )}
             </CardBody>
           </Card>
         </div>

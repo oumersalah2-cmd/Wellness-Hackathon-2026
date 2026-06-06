@@ -92,6 +92,21 @@ export async function signInWithGoogle() {
   return { data: { user }, error: null }
 }
 
+export async function signInWithGithub() {
+  const client = getClient()
+  if (client) {
+    return client.auth.signInWithOAuth({
+      provider: 'github',
+      options: {
+        redirectTo: typeof window !== 'undefined' ? `${window.location.origin}/en/dashboard` : undefined,
+      },
+    })
+  }
+  const user = { id: 'demo-github-user', email: 'github.demo@fitethio.com' }
+  setDemoUser(user)
+  return { data: { user }, error: null }
+}
+
 export async function signOut() {
   const client = getClient()
   if (client) return client.auth.signOut()
